@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C_ABAPD_2507 Full Exam Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .option-card { transition: all 0.2s; border: 2px solid transparent; }
+        .option-card:hover:not(.disabled) { background-color: #f3f4f6; border-color: #d1d5db; }
+        .option-card.selected { border-color: #3b82f6; background-color: #eff6ff; }
+        .option-card.correct { border-color: #10b981; background-color: #ecfdf5; }
+        .option-card.wrong { border-color: #ef4444; background-color: #fef2f2; }
+        .disabled { pointer-events: none; opacity: 0.9; }
+        pre { white-space: pre-wrap; word-wrap: break-word; background: #2d2d2d; color: #eee; padding: 1rem; border-radius: 0.5rem; font-size: 0.85rem; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="bg-white p-8 rounded-xl shadow-lg max-w-2xl w-full text-center fade-in">
+        <div class="mb-6 text-blue-600">
+            <i class="fas fa-graduation-cap text-6xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">ABAP Certification Exam</h1>
+        <h2 class="text-xl text-gray-600 mb-6">C_ABAPD_2507 | 80 Questions</h2>
+        
+        <div class="bg-blue-50 p-4 rounded-lg text-left mb-6 text-sm text-gray-700">
+            <p class="mb-2"><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Mode:</strong> One question at a time.</p>
+            <p class="mb-2"><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Feedback:</strong> Instant answer checking.</p>
+            <p class="mb-2"><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Shuffle:</strong> Questions and answers are randomized every time.</p>
+            <p><i class="fas fa-check-circle text-blue-500 mr-2"></i><strong>Passing Score:</strong> 65%</p>
+        </div>
+
+        <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105">
+            Start Exam
+        </button>
+    </div>
+
+    
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden max-w-3xl w-full fade-in">
+        <!-- Header / Progress -->
+        <div class="bg-white p-4 rounded-t-xl shadow-sm flex justify-between items-center mb-1">
+            <span class="font-bold text-gray-500" id="progress-text">Question 1 of 80</span>
+            <button onclick="confirmRestart()" class="text-sm text-red-500 hover:text-red-700"><i class="fas fa-redo"></i> Restart</button>
+        </div>
+        <div class="w-full bg-gray-200 h-2 mb-6 rounded-full overflow-hidden">
+            <div id="progress-bar" class="bg-blue-600 h-2 transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg relative">
+            
+            <div id="question-container">
+                <span id="q-badge" class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded mb-4 uppercase tracking-wide font-bold">Single Answer</span>
+                <h3 id="q-text" class="text-xl md:text-2xl font-semibold text-gray-800 mb-6 leading-relaxed"></h3>
+                
+                <!-- Code Snippet Area -->
+                <div id="q-code" class="hidden mb-6"></div>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                <div id="feedback-area" class="hidden">
+                    <span id="feedback-icon" class="text-2xl mr-2"></span>
+                    <span id="feedback-text" class="font-bold text-lg"></span>
+                </div>
+                <div class="flex space-x-3 ml-auto">
+                    <button id="submit-btn" onclick="submitAnswer()" class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded-lg transition shadow">
+                        Check Answer
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition shadow-lg flex items-center">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="hidden bg-white p-8 rounded-xl shadow-lg max-w-2xl w-full text-center fade-in">
+        <div class="mb-6" id="result-icon-container">
+            <!-- Icon injected via JS -->
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Exam Completed!</h1>
+        <p class="text-gray-600 mb-8">Here is how you performed:</p>
+
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-3xl font-bold text-gray-800" id="final-score">0</div>
+                <div class="text-sm text-gray-500">Correct Answers</div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="text-3xl font-bold text-blue-600" id="final-percentage">0%</div>
+                <div class="text-sm text-gray-500">Score</div>
+            </div>
+        </div>
+
+        <div id="pass-fail-msg" class="text-xl font-bold mb-8"></div>
+
+        <button onclick="initQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105">
+            Take Exam Again
+        </button>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const db = [
+            { t: "How can you execute test classes?", type: "m", code: null, opts: [
+                {t:"Interactively by calling function \"Run as a unit test\" from within the tested object.", c:true},
+                {t:"As a mass test when releasing a transport request with the ABAP Transport Organizer.", c:false},
+                {t:"Interactively by calling function \"Run as a unit test\" from within the test class.", c:true},
+                {t:"Interactively during the release of transport request.", c:false},
+                {t:"As a mass test when executing an ABAP Test Cockpit (ATC) check variant.", c:true}
+            ]},
+            { t: "What is a class defined as part of an ABAP program called?", type: "s", code: null, opts: [
+                {t:"Local class", c:true}, {t:"Global class", c:false}, {t:"Local variable", c:false}, {t:"Global variable", c:false}
+            ]},
+            { t: "Which function call produces the string 'LORE IPSUM FACTUM'?", type: "s", code: null, opts: [
+                {t:"to_upper(condense('Lore Ipsum Factum'))", c:true},
+                {t:"from_mixed(val = 'LorelpsumFactum' sep=)", c:false},
+                {t:"to_mixed(val = 'Lore IpsumFactum' sep=)", c:false},
+                {t:"condense to_upper('Lorelpsum Factum'))", c:false}
+            ]},
+            { t: "Given this code, which of the following statements are correct?", type: "m", code: "DATA(structure_variable) = REDUCE structure_type(\n  INIT h_structure_variable TYPE structure_type\n  FOR row IN source_itab\n  NEXT h_structure_variable-f1 += row-f1\n       h_structure_variable-f2 += row-f2 ).", opts: [
+                {t:"Components of h_structure_variable will be copied to same-named components of structure_variable.", c:true},
+                {t:"row is a predefined name and and cannot be changed.", c:false},
+                {t:"The REDUCE expression creates a loop over source_itab.", c:true},
+                {t:"This REDUCE expression may produce a result of multiple rows.", c:false}
+            ]},
+            { t: "Which statement creates a reference variable for class CL_VEHICLE?", type: "s", code: null, opts: [
+                {t:"TYPES lo_vehicle TYPE cl_vehicle.", c:false},
+                {t:"DATA lo_vehicle TYPE REF TO cl_vehicle.", c:true},
+                {t:"DATA lo_vehicle LIKE REF cl_vehicle.", c:false},
+                {t:"DATA lo_vehicle TYPE REF OF cl_vehicle.", c:false}
+            ]},
+            { t: "Given the following code, What are valid statements?", type: "m", code: "DATA gv_text1 TYPE string. \"#EC_NEEDED\nDATA gv_text2 TYPE string ##NEEDED.", opts: [
+                {t:"#EC_NEEDED is not checked by the syntax checker.", c:true},
+                {t:"##NEEDED is checked by the syntax checker.", c:true},
+                {t:"The pseudo-comment is checked by the syntax checker.", c:false},
+                {t:"The pragma is not checked by the syntax checker.", c:false}
+            ]},
+            { t: "What are some principles of encapsulation?", type: "m", code: null, opts: [
+                {t:"Attributes can be changed by the client program directly.", c:false},
+                {t:"Attributes cannot be changed.", c:false},
+                {t:"Attributes can be changed through public class methods.", c:true},
+                {t:"Attributes can only be changed by the class.", c:true}
+            ]},
+            { t: "Which statement can you use to change the contents of a row of data in an internal table?", type: "s", code: null, opts: [
+                {t:"INSERT", c:false}, {t:"MODIFY", c:true}, {t:"APPEND", c:false}, {t:"UPDATE", c:false}
+            ]},
+            { t: "In a booking record, how can you calculate the difference in days between the order date (type D) and the flight date (type D) of a flight?", type: "s", code: null, opts: [
+                {t:"data(gv_diff_days) = conv d(gs_booking-order_date - gs_booking-flight_date).", c:false},
+                {t:"data(gv_diff_days) = gs_booking-flight_date - gs_booking-order_date.", c:false},
+                {t:"data(gv_diff_days) = conv d(gs_booking-flight_date - gs_booking-order_date).", c:false},
+                {t:"data(gv_diff_days) = gs_booking-order_date - gs_booking-flight_date.", c:true}
+            ]},
+            { t: "While debugging an ABAP program, you want the program to stop whenever the value of a variable change. Which of the following do you use?", type: "s", code: null, opts: [
+                {t:"Exception", c:false}, {t:"Conditional breakpoint", c:false}, {t:"Breakpoint Watchpoint", c:true}
+            ]},
+            { t: "What are some features of the current ABAP programming language?", type: "m", code: null, opts: [
+                {t:"A data object's type can change at runtime.", c:false},
+                {t:"Keywords are case-sensitive.", c:false},
+                {t:"It has built-in database access.", c:true},
+                {t:"The code is expression-based.", c:true}
+            ]},
+            { t: "Which of the following pre-defined ABAP data types is a complete data type?", type: "s", code: null, opts: [
+                {t:"N", c:false}, {t:"C", c:false}, {t:"P", c:true}, {t:"D", c:false}
+            ]},
+            { t: "Constructors have which of the following properties?", type: "m", code: null, opts: [
+                {t:"The constructor is automatically called during instantiation.", c:true},
+                {t:"The constructor can have importing parameters.", c:true},
+                {t:"The constructor must be the first method called by the client.", c:false},
+                {t:"The constructor returns a value.", c:false}
+            ]},
+            { t: "Which function call matches findings for 'find FOUND Found'?", type: "s", code: null, opts: [
+                {t:"find(val = 'FIND Found found' sub 'F' occ = -2 CASE = abap_true)", c:false},
+                {t:"find(val 'find FOUND Found' sub 'F' occ = -2 CASE = abap_false)", c:false},
+                {t:"find(val 'find Found FOUND' sub 'F' occ = -2)", c:true},
+                {t:"find(val 'find Found FOUND' sub 'F' occ-2-2)", c:false}
+            ]},
+            { t: "Given the following ABAP code, which exception will be raised on execution?", type: "s", code: "CONSTANTS c char TYPE C LENGTH 1 VALUE \"x\" .\nTRY.\nresult numbers[2/c char ].\nout->write(Result:  result  | ).\n...", opts: [
+                {t:"cx_sy_conversion_no_number", c:true},
+                {t:"cx_sy_zerodivide", c:false},
+                {t:"cx_sy_itab_line_not_found", c:false}
+            ]},
+            { t: "To give authorization to users, in which order are the artifacts being used?", type: "s", code: null, opts: [
+                {t:"The IAM app uses the Business Catalog. The Business Catalog uses the Business Role...", c:false},
+                {t:"The IAM app uses the Business Role. The Business Role uses the Authorization Object...", c:false},
+                {t:"The IAM app uses the Authorization Object. The Business Catalog uses the IAM app...", c:false},
+                {t:"The IAM app uses the Business User. The Business User uses the Business Catalog. The Business Catalog uses the Business Role. The Business Role uses the Authorization Object.", c:true}
+            ]},
+            { t: "When you work with a test class you can set up some prerequisites before the actual testing. In which sequence will the following fixtures be called by the test environment?", type: "s", code: "A. teardown()\nB. class_setup()\nC. class_teardown()\nD. setup()", opts: [
+                {t:"A, B, C, D", c:false},
+                {t:"B. class_setup(), D. setup(), A. teardown(), C. class_teardown()", c:true},
+                {t:"D, A, B, C", c:false},
+                {t:"C, A, D, B", c:false}
+            ]},
+            { t: "How can you control data access of a business user?", type: "m", code: null, opts: [
+                {t:"To control the general access implicitly via an Access Control object (define role).", c:true},
+                {t:"To control the \"Read access\" implicitly via an Access Control object (define role).", c:false},
+                {t:"To control the \"Create, Update, and Delete access\" implicitly via an Access Control object (define role).", c:false},
+                {t:"To control the \"Create, Update, and Delete access\" via explicit check using AUTHORITY-CHECK.", c:true},
+                {t:"To control the \"Read access\" via explicit check using AUTHORITY-CHECK.", c:true}
+            ]},
+            { t: "You want to check the behavior of an ordinary class ZCL_ORDINARY with class LTCL_TEST. How do you specify LTCL_TEST as a test class?", type: "s", code: null, opts: [
+                {t:"Use the addition \"FOR TESTING\" in the class declaration of LTCL_TEST.", c:true},
+                {t:"Use the addition \"FOR TESTING: LTCL_TEST\" in the class declaration of ZCL_ORDINARY.", c:false},
+                {t:"Create a parameter in the SETUP method of LTCL_TEST and set its value to \"Test\".", c:false},
+                {t:"Create LTCL_TEST in a special package that is reserved for test classes.", c:false}
+            ]},
+            { t: "Which of the following results in faster access to internal tables?", type: "m", code: null, opts: [
+                {t:"In a sorted internal table, specifying the primary key completely.", c:true},
+                {t:"In a standard internal table, specifying the primary key partially from the left without gaps.", c:false},
+                {t:"In a sorted internal table, specifying the primary key partially from the left without gaps.", c:true},
+                {t:"In a hashed internal table, specifying the primary key partially from the left without gaps.", c:false},
+                {t:"In a hashed internal table, specifying the primary key completely.", c:true}
+            ]},
+            { t: "What can be translated?", type: "m", code: null, opts: [
+                {t:"Content of a String variable", c:false}, {t:"Text symbol", c:true}, {t:"Text literal", c:true}, {t:"Message class", c:true}, {t:"Data element texts", c:true}
+            ]},
+            { t: "Given the following data definitions: ... In which of the following functions can you use regular expressions?", type: "m", code: "DATA: text TYPE string VALUE 'Date 1972-04-01 is in ISO format'.\nDATA: regex TYPE string VALUE '[0-9]{4}-[0-9]{2}-[0-9]{2}'.", opts: [
+                {t:"matches(val = text pcre = regex)", c:true},
+                {t:"reverse(val = text pcre = regex)", c:false},
+                {t:"find(val = text pcre = regex)", c:true},
+                {t:"condense(val = text pcre = regex)", c:false},
+                {t:"match(val = text pcre = regex)", c:true}
+            ]},
+            { t: "When defining a METHOD, which parameter type can only have 1 value?", type: "s", code: null, opts: [
+                {t:"CHANGING", c:false}, {t:"EXPORTING", c:false}, {t:"IMPORTING", c:false}, {t:"RETURNING", c:true}
+            ]},
+            { t: "What is the syntax to access component carrier_name of structure connection?", type: "s", code: null, opts: [
+                {t:"connection/carrier_name", c:false},
+                {t:"connection=>carrier_name", c:false},
+                {t:"connection->carrier name", c:false},
+                {t:"connection-carrier_name", c:true}
+            ]},
+            { t: "Which internal table type allows unique and non-unique keys?", type: "s", code: null, opts: [
+                {t:"Standard", c:false}, {t:"Hashed", c:false}, {t:"Sorted", c:true}
+            ]},
+            { t: "What describes multi-column internal tables?", type: "s", code: null, opts: [
+                {t:"They use one incomplete data type.", c:false},
+                {t:"They use one complete data type.", c:false},
+                {t:"They must contain nested components.", c:false},
+                {t:"They are based on a structured row type.", c:true}
+            ]},
+            { t: "Given this code... what are valid statements?", type: "m", code: "INTERFACE if1. METHODS m1. ENDINTERFACE.\nCLASS C11 DEFINITION.\nPUBLIC SECTION.\nINTERFACES if1.\nMETHODS m2.\nENDCLASS.\n\nDATA go_if1 TYPE REF TO if1.\nDATA go_cl1 TYPE REF TO cl1.", opts: [
+                {t:"Instead of go_cl1 = NEW #(...) you could use go_if1 = NEW cl1(...).", c:true},
+                {t:"go_if1 may call method m1 with go_if1->m1(...).", c:true},
+                {t:"go_cl1 may call method m1 with go_cl1->if1~m1(...).", c:true},
+                {t:"go_if1 may call method m2 with go_if->m2(...).", c:false},
+                {t:"Instead of go_cl1 = NEW #(...) you could use go_if1 = NEW #(...).", c:false}
+            ]},
+            { t: "You want to document a global class with ABAP Doc. What do you need to consider?", type: "m", code: null, opts: [
+                {t:"The documentation starts with \"!", c:true},
+                {t:"The documentation has to be positioned directly after the declarative statement.", c:false},
+                {t:"The documentation can contain links to other repository object's documentation.", c:true},
+                {t:"The documentation can be translated.", c:true},
+                {t:"The documentation may contain tags like <strong></strong>.", c:false}
+            ]},
+            { t: "What are some necessary parts of the singleton pattern?", type: "m", code: null, opts: [
+                {t:"Constructor visibility is set to private.", c:true},
+                {t:"Class creation is set to \"create private\".", c:false},
+                {t:"Class method to create the singleton instance is set to private.", c:false},
+                {t:"Static attribute to store address of the singleton instance must exist.", c:true},
+                {t:"Class method to create the singleton instance must exist.", c:true}
+            ]},
+            { t: "In a subclass sub1 you want to redefine a component of a superclass super1. How do you achieve this?", type: "m", code: null, opts: [
+                {t:"You add the clause REDEFINITION to the component in sub1.", c:true},
+                {t:"You implement the redefined component for a second time in super1.", c:false},
+                {t:"You add the clause REDEFINITION to the component in super1.", c:false},
+                {t:"You implement the redefined component in sub1.", c:true}
+            ]},
+            { t: "When you create an exception class, what does SAP recommend you do?", type: "m", code: null, opts: [
+                {t:"Inherit from cx_static_check, if you want a warning at design time that the exception can never be raised.", c:false},
+                {t:"Define corresponding public attributes, if you want to pass context-specific values to placeholders of a message.", c:true},
+                {t:"Implement interface if_t100_message, if you want to reuse messages from a message class.", c:true},
+                {t:"Inherit from cx_no_check, if you want to reuse messages from a system exception class.", c:false},
+                {t:"Inherit from cx_static_check, if you want a warning at design time that the exception will not be caught.", c:true}
+            ]},
+            { t: "Which statements apply to the TRY-ENDTRY construct?", type: "m", code: null, opts: [
+                {t:"CATCH clauses should be organized ascending from most specific to most general.", c:true},
+                {t:"A CLEANUP clause catches remaining exceptions.", c:false},
+                {t:"A superclass in a CATCH clause catches exceptions of itself and of its subclasses.", c:true},
+                {t:"A CATCH clause can be used as a handler for several exception classes.", c:true},
+                {t:"All matching CATCH clauses are always executed.", c:false}
+            ]},
+            { t: "You have a superclass super1 and a subclass sub1... The correct order is:", type: "s", code: null, opts: [
+                {t:"Class constructor of super1 -> Class constructor of sub1 -> Instance constructor of super1 -> Instance constructor of sub1", c:true},
+                {t:"Instance constructor of super1 -> Instance constructor of sub1", c:false},
+                {t:"Class constructor of sub1 -> Class constructor of super1", c:false},
+                {t:"Instance constructor of sub1 -> Instance constructor of super1", c:false}
+            ]},
+            { t: "How do you make class sub1 a subclass of class super1?", type: "s", code: null, opts: [
+                {t:"In sub1 use clause \"INHERITING FROM super1\" in the DEFINITION part.", c:true},
+                {t:"In super1 use clause \"sub1 REDEFINITION\" in the DEFINITION part.", c:false},
+                {t:"In sub1 use clause \"INHERITING FROM super1\" in the IMPLEMENTATION part.", c:false},
+                {t:"In super1 use clause \"sub1 REDEFINITION\" in the IMPLEMENTATION part.", c:false}
+            ]},
+            { t: "Given the following ABAP SQL statement excerpt... which of the following general settings should you set for the spfli database table?", type: "m", code: "SELECT SINGLE FROM spfli ...", opts: [
+                {t:"\"Load Unit\" to \"Column Loadable\"", c:true},
+                {t:"\"Storage Type\" to \"Column Store\"", c:true},
+                {t:"\"Storage Type\" to \"Row Store\"", c:false},
+                {t:"\"Load Unit\" to \"Page Loadable\"", c:false}
+            ]},
+            { t: "You have two database tables - ZDEPARTMENTS and ZEMPLOYEES... What is the correct cardinality of the foreign key relationship?", type: "s", code: null, opts: [
+                {t:"[0..1, 1]", c:false}, {t:"[0..*, 1]", c:true}, {t:"[1, 1]", c:false}, {t:"[1..*, 1]", c:false}
+            ]},
+            { t: "Which of the following are features of Core Data Services?", type: "m", code: null, opts: [
+                {t:"Structured Query Language (SQL)", c:true},
+                {t:"Inheritance", c:false},
+                {t:"Associations", c:true},
+                {t:"Delegation", c:false},
+                {t:"Annotations", c:true}
+            ]},
+            { t: "You have the following CDS definition... Which of the following ON conditions must you insert in place of \"???\"?", type: "s", code: "define view entity Z_ENTITY as select from Z_SOURCE1 as _Source1 association to Z_SOURCE2 as _Source2...", opts: [
+                {t:"ON $projection.Carrier = _Source2.carrier", c:false},
+                {t:"ON Z_Source1.carrier_id=Z_Source2.carrier_id", c:false},
+                {t:"ON $projection.Carrier = _Source2.carrier_id", c:false},
+                {t:"ON $projection.carrier_id = _Source2.carrier_id", c:true}
+            ]},
+            { t: "You are a consultant and the client wants you to extend this SAP database table with a new field called \"zz_countrycode\" on line. Which of the following is the correct response?", type: "s", code: null, opts: [
+                {t:"The database table can be extended whether extensibility enabled or not if it is assigned to a software component of type \"Standard ABAP\".", c:false},
+                {t:"The database table can be extended once it has been extensibility enabled by the customer.", c:false},
+                {t:"The database table can be extended whether extensibility enabled or not if it is assigned to a software component of type \"ABAP Cloud\".", c:true},
+                {t:"The database table cannot be extended since it has not been extensibility enabled by SAP.", c:false}
+            ]},
+            { t: "You select a field flight_date with type DATS in the field list of a CDS view. Which of the following expressions returns the 2-digit month from the field?", type: "m", code: null, opts: [
+                {t:"left(right(flight_date, 6), 2)", c:true},
+                {t:"substring(flight_date, 5, 2)", c:true},
+                {t:"right(left(flight_date, 6), 2)", c:false},
+                {t:"substring( flight_date, 4, 2)", c:false}
+            ]},
+            { t: "Which of the following is a technique for defining access controls?", type: "s", code: null, opts: [
+                {t:"Data Control Language (DCL)", c:true}, {t:"Inheritance", c:false}, {t:"Singleton", c:false}, {t:"PFCG Role", c:false}
+            ]},
+            { t: "Given the following code excerpt that defines an SAP HANA database table... Which field is defined incorrectly?", type: "s", code: "KEY field1: REFERENCE TO abap.clnt(3);\nKEY field2 abap.char(1332);\n...", opts: [
+                {t:"field2", c:false}, {t:"field4", c:false}, {t:"field3", c:false}, {t:"field1", c:true}
+            ]},
+            { t: "Given the following Core Data Services View Entity Data... when you attempt to activate the definition, what will be the response?", type: "s", code: "DEFINE VIEW ENTITY demo_cds_view_entity AS SELECT FROM spfli { cityfrom, cityto }", opts: [
+                {t:"Activation error due to missing annotation \"@AbapCatalog.sqlViewName\"", c:false},
+                {t:"Activation error due to missing annotation \"@AccessControl.authorizationCheck\"", c:false},
+                {t:"Activation will be successful", c:false},
+                {t:"Activation error due to no key defined", c:true}
+            ]},
+            { t: "Which of the following actions cause an indirect change to a database table requiring a table conversion?", type: "m", code: null, opts: [
+                {t:"Changing the field labels of a data element that is used in the table definition.", c:false},
+                {t:"Shortening the length of a domain used in a data element that is used in the table definition.", c:true},
+                {t:"Deleting a field from a structure that is included in the table definition.", c:true},
+                {t:"Renaming a field in a structure that is included in the table definition.", c:false}
+            ]},
+            { t: "In CDS views, what do joins and associations have in common?", type: "m", code: null, opts: [
+                {t:"The data sources are linked using an ON clause.", c:true},
+                {t:"The field list can include fields of the linked table without specifying the name of the corresponding data source.", c:false},
+                {t:"They can expose an entire data source listing individual fields.", c:false},
+                {t:"An alias can be assigned to the data sources and to the fields in the field list.", c:true}
+            ]},
+            { t: "You want to define the following CDS view entity with an input parameter: ... Which of the following can you use to replace \"???\"?", type: "m", code: "entity Z_CONVERT with parameters i_currency: ???", opts: [
+                {t:"A built-in ABAP type", c:false},
+                {t:"A built-in ABAP Dictionary type", c:true},
+                {t:"A data element", c:true},
+                {t:"A component of an ABAP Dictionary structure", c:false}
+            ]},
+            { t: "Which of the following Core Data Services built-in functions returns a result of type INT4?", type: "m", code: null, opts: [
+                {t:"dats_days_between", c:true},
+                {t:"dats_is_valid", c:true},
+                {t:"dats_add_months", c:false},
+                {t:"dats_add_days", c:false}
+            ]},
+            { t: "Which of the following types of Core Data Services Views can be used at the consumption layer?", type: "m", code: null, opts: [
+                {t:"Table Function", c:true},
+                {t:"Analytical Query", c:true},
+                {t:"Transactional Interface", c:false},
+                {t:"Transactional Query", c:false},
+                {t:"Hierarchy", c:true}
+            ]},
+            { t: "In class ZCL_CLASS_A, you use the statement DATA var TYPE *** What may stand in place of ***?", type: "m", code: null, opts: [
+                {t:"The name of a domain from the ABAP Dictionary", c:false},
+                {t:"The name of a type defined privately in class ZCL_CLASS_A", c:true},
+                {t:"The name of a data element from the ABAP Dictionary", c:true},
+                {t:"The name of a type defined privately in another class", c:false}
+            ]},
+            { t: "Given the following Core Data Service View Entity Data Definition... when you attempt to activate the definition, what will be the response?", type: "s", code: "DEFINE VIEW ENTITY demo_flight_info_union... UNION SELECT FROM stravelag...", opts: [
+                {t:"Activation error because the key fields of the union do not match", c:true},
+                {t:"Activation error because the field types match", c:false},
+                {t:"Activation successful", c:false},
+                {t:"Activation error because the field names of the union do not match", c:false}
+            ]},
+            { t: "What is the purpose of a foreign key relationship between two tables in the ABAP Dictionary?", type: "s", code: null, opts: [
+                {t:"To document the relationship between the two tables", c:false},
+                {t:"To create a corresponding foreign key relationship in the database", c:false},
+                {t:"To ensure the integrity of data in the corresponding database tables", c:true}
+            ]},
+            { t: "Which of the following ABAP SQL snippets are syntactically correct ways to provide a value for the parameter on line #4?", type: "m", code: "DEFINE VIEW ENTITY demo_cds_param_view_entity WITH PARAMETERS p_date : abap.dats", opts: [
+                {t:"...SELECT * FROM demo_cds_param_view_entity(p_date = '20230101') ....", c:true},
+                {t:"SELECT FROM demo_cds_param_view_entity(p_date: 20230101') ...", c:false},
+                {t:"...SELECT FROM demo_cds_param_view_entity(p_date = @(cl_abap_context_info=>get_system_date()) ...", c:true},
+                {t:"SELECT FROM demo_cds_param_view_entity(p_date: $session.system_date) ....", c:false}
+            ]},
+            { t: "You have attached a system field to an input parameter of a CDS view entity... What are the effects of this annotation?", type: "m", code: "@Environment.SystemField: #SYSTEM_LANGUAGE", opts: [
+                {t:"It is no longer possible to pass your own value to the parameter.", c:false},
+                {t:"The value of sy-langu will be passed to the CDS view automatically both when you use the CDS view in ABAP and in another CDS view entity.", c:false},
+                {t:"The value of sy-langu will be passed to the CDS view automatically when you use the CDS view in ABAP but not when you use it in another view entity.", c:true},
+                {t:"You can still override the default value with a value of your own.", c:true}
+            ]},
+            { t: "Which of the following are reasons that SAP recommends developing Core Data Services view entities as opposed to classic Core Data Services DDIC-based views?", type: "m", code: null, opts: [
+                {t:"Simpler and stricter syntax", c:true},
+                {t:"Simplified syntax check", c:false},
+                {t:"Automated client handling", c:false},
+                {t:"Elimination of the need for a database view", c:true}
+            ]},
+            { t: "Which of the following integration frameworks have been released for ABAP cloud development?", type: "m", code: null, opts: [
+                {t:"Use CI/CD pipelines", c:false},
+                {t:"Use predefined extension points", c:false},
+                {t:"OData, HTTP, SQL", c:true},
+                {t:"Build at the UX layer", c:false}
+            ]},
+            { t: "Which of the following are reasons to use the side-by-side extensibility pattern?", type: "m", code: null, opts: [
+                {t:"An extension enhances an existing SAP Fiori UI", c:false},
+                {t:"An extension is managed independently from SAP S/4HANA", c:true},
+                {t:"An extension uses its own data model with occasional consumption of data in SAP S/4HANA", c:true},
+                {t:"An extension implements reactive (event based) process extensions", c:true},
+                {t:"An extension runs in the same logical unit of work (LUW) as an SAP S/4HANA application", c:false}
+            ]},
+            { t: "Which of the following are personas under the SAP S/4HANA Cloud Extensibility Framework?", type: "m", code: null, opts: [
+                {t:"Workflow Administrator", c:false}, {t:"Citizen Developer", c:true}, {t:"Report Writer", c:false}, {t:"Business Expert", c:true}
+            ]},
+            { t: "Which of the following custom code use cases falls under Tier 1 extensibility guidelines?", type: "s", code: null, opts: [
+                {t:"Apply an SAP note with manual corrections, for example a DDIC object from SAP Basis.", c:false},
+                {t:"Create a wrapper class around SAP objects that have not been released yet.", c:false},
+                {t:"Create a custom field on a DB table or CDS view via a released extension include.", c:true},
+                {t:"Implement a user or customer exits, for example SAPMV45A.", c:false}
+            ]},
+            { t: "Which of the following are rules that extensions in SAP S/4HANA Cloud, public edition must adhere to?", type: "m", code: null, opts: [
+                {t:"Use tier 2 wrappers to enable access to non-released SAP APIs.", c:false},
+                {t:"Use released remote or local SAP APIs.", c:true},
+                {t:"Use cloud-enabled and released technologies.", c:true},
+                {t:"Modify SAP objects in exceptional cases only.", c:false},
+                {t:"Extend SAP objects through predefined extension points.", c:true}
+            ]},
+            { t: "What can you do in SAP S/4HANA Cloud, public edition?", type: "m", code: null, opts: [
+                {t:"Use Web Dynpros", c:false},
+                {t:"Use ABAP Development Tools in Eclipse (ADT)", c:true},
+                {t:"Modify SAP objects", c:false},
+                {t:"Use SAP-released APIs", c:true}
+            ]},
+            { t: "Which of the following enforce ABAP Cloud rules?", type: "m", code: null, opts: [
+                {t:"ABAP platform reuse services", c:false},
+                {t:"ABAP compiler", c:true},
+                {t:"ABAP runtime checks", c:true},
+                {t:"ABAP release contracts", c:false}
+            ]},
+            { t: "Which of the following models must you use to develop artifacts that expose ABAP-based backend services based on semantic data models?", type: "m", code: null, opts: [
+                {t:"ABAP Programming Model for SAP Fiori", c:true},
+                {t:"Cloud Application Programming Model", c:false},
+                {t:"ABAP RESTful application programming model", c:true},
+                {t:"ABAP Cloud Development Model", c:false}
+            ]},
+            { t: "What are some features of ABAP SQL?", type: "m", code: null, opts: [
+                {t:"It is integrated in the ABAP programming language.", c:true},
+                {t:"It is first processed by the Database Database Interface.", c:true},
+                {t:"It is only valid on the HANA database.", c:false},
+                {t:"It is directly executed on the HANA database.", c:false}
+            ]},
+            { t: "Which of the following rules apply for dividing with ABAP SQL?", type: "m", code: null, opts: [
+                {t:"Numeric function division(nominator, denominator, decimal places) accepts floating point", c:true},
+                {t:"The division operator \"/\" accepts decimal input.", c:true},
+                {t:"The division operator \"/\" accepts floating point input.", c:false},
+                {t:"Numeric function div(nominator, denominator) expects only integer input.", c:true},
+                {t:"Numeric function division(nominator, denominator, decimal places) accepts decimal input.", c:false}
+            ]},
+            { t: "Which of the following ABAP SQL aggregate functions accept an ABAP SQL expression (e.g. f1 +f2) as input?", type: "m", code: null, opts: [
+                {t:"max()", c:false}, {t:"avg()", c:true}, {t:"sum()", c:true}, {t:"count(*)", c:false}
+            ]},
+            { t: "In a CDS view, where can a value help be defined?", type: "s", code: null, opts: [
+                {t:"In the SQL console", c:false}, {t:"In a view definition", c:false}, {t:"In an annotation", c:true}, {t:"In an association", c:false}
+            ]},
+            { t: "You want to extract date information... For the extract *functions to work, what can be the data dictionary types of f_info?", type: "m", code: "extract_year(f_info) && ...", opts: [
+                {t:"TIMESTAMP", c:true}, {t:"TIMN", c:false}, {t:"UTCLONG", c:false}, {t:"DATS", c:true}, {t:"TIMS", c:true}
+            ]},
+            { t: "When you join two database tables, which of the following rules applies to the database fields you use in the join?", type: "s", code: null, opts: [
+                {t:"They must be compared with an ON condition.", c:true},
+                {t:"They must have the same name, e.g. col1=col1", c:false},
+                {t:"They must always have an alias name.", c:false},
+                {t:"They must be the same position in their table, for example left_table-col1 = right_table-col1.", c:false}
+            ]},
+            { t: "Which of the following are valid ABAP SQL type conversions?", type: "m", code: null, opts: [
+                {t:"CAST ('field_f1' as CHAR (8)) AS f_chars", c:true},
+                {t:"CAST (29 as INT8) AS f_int8", c:true},
+                {t:"CAST (field_f2 as N (8)) AS f_n8", c:false},
+                {t:"CAST (34 as I) AS f_i34", c:false},
+                {t:"CAST (field_f5 as DEC (15,2)) AS f_dec_15_2", c:true}
+            ]},
+            { t: "You want to join two database tables, T_CARRIER, and T_CONNECTIONS, to retrieve all carriers, whether they have corresponding connections or not. Which statements would achieve this?", type: "m", code: null, opts: [
+                {t:"SELECT FROM carrier LEFT OUTER JOIN t_connections ON...", c:true},
+                {t:"SELECT FROM carrier INNER JOIN t_connections ON...", c:false},
+                {t:"SELECT FROM connections RIGHT OUTER JOIN t_carrier ON...", c:true},
+                {t:"SELECT FROM carrier LEFT INNER JOIN t_connections ON...", c:false}
+            ]},
+            { t: "In a RESTful Application Programming object, where is the validation implementation code contained?", type: "s", code: null, opts: [
+                {t:"Function", c:false}, {t:"Local class", c:true}, {t:"Subroutine", c:false}, {t:"Global class", c:false}
+            ]},
+            { t: "Which language is used to add or change data of a business object in RESTful Application Programming?", type: "s", code: null, opts: [
+                {t:"Entity manipulation language", c:false},
+                {t:"RAP editing language", c:false},
+                {t:"Data modification language", c:false},
+                {t:"Data manipulation language", c:true}
+            ]},
+            { t: "In what order are objects created to generate a RESTful Application Programming application?", type: "s", code: null, opts: [
+                {t:"A. A Database table -> B. A Data model view -> C. Service Binding -> D. Projection view -> E. Service Definition", c:false},
+                {t:"A Database table -> A Data model view -> Service Definition -> Projection view -> Service Binding", c:false},
+                {t:"A Database table -> A Data model view -> Projection view -> Service Definition -> Service Binding", c:true},
+                {t:"Service definition -> Data model view -> Projection view -> Database table -> Service binding", c:false}
+            ]},
+            { t: "Which RESTful Application Programming object can be used to organize the display of fields in an app?", type: "s", code: null, opts: [
+                {t:"Projection view", c:false}, {t:"Metadata extension", c:true}, {t:"Data model view", c:false}, {t:"Service definition", c:false}
+            ]},
+            { t: "What RESTful Application Programming feature is used to ensure the uniqueness of a semantic key?", type: "s", code: null, opts: [
+                {t:"Action", c:false}, {t:"Determination", c:false}, {t:"Validation", c:true}
+            ]},
+            { t: "What RESTful Application Programming object contains only the fields required for a particular app?", type: "s", code: null, opts: [
+                {t:"Projection view", c:true}, {t:"Database view", c:false}, {t:"Data model view", c:false}, {t:"Metadata extension", c:false}
+            ]},
+            { t: "In RESTful Application Programming, a business object contains which parts?", type: "m", code: null, opts: [
+                {t:"Authentication rules", c:false}, {t:"Behaviour definition", c:true}, {t:"Process definition", c:false}, {t:"CDS view", c:true}
+            ]},
+            { t: "After you created a database table in the RESTful Application Programming model, what do you create next?", type: "s", code: null, opts: [
+                {t:"A data model view", c:true}, {t:"A service definition", c:false}, {t:"A metadata extension", c:false}, {t:"A projection view", c:false}
+            ]},
+            { t: "Setting a field to read-only in which object would make the field read-only in all applications of the RESTful Application Programming model?", type: "s", code: null, opts: [
+                {t:"Projection view", c:false}, {t:"Behaviour definition", c:true}, {t:"Service definition", c:false}, {t:"Metadata extension", c:false}
+            ]}
+        ];
+
+        let questions = [];
+        let currentIdx = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Clone and Shuffle Questions
+            questions = JSON.parse(JSON.stringify(db));
+            shuffle(questions);
+            
+            // Shuffle Options inside Questions
+            questions.forEach(q => shuffle(q.opts));
+
+            // Reset State
+            currentIdx = 0;
+            score = 0;
+            userAnswers = [];
+            
+            // UI Reset
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            showQuestion();
+        }
+
+        function startQuiz() {
+            initQuiz();
+        }
+
+        function confirmRestart() {
+            if(confirm("Are you sure you want to restart? Your progress will be lost.")) {
+                startQuiz();
+            }
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            
+            // Update Progress
+            const pct = ((currentIdx) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-text').innerText = `Question ${currentIdx + 1} of ${questions.length}`;
+
+            // Render Text & Badge
+            document.getElementById('q-text').innerText = q.t;
+            const badge = document.getElementById('q-badge');
+            badge.innerText = q.type === 'm' ? "Multiple Correct Answers" : "Single Correct Answer";
+            badge.className = q.type === 'm' 
+                ? "inline-block bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded mb-4 uppercase tracking-wide font-bold"
+                : "inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mb-4 uppercase tracking-wide font-bold";
+
+            // Render Code
+            const codeArea = document.getElementById('q-code');
+            if (q.code) {
+                codeArea.innerHTML = `<pre><code>${q.code}</code></pre>`;
+                codeArea.classList.remove('hidden');
+            } else {
+                codeArea.classList.add('hidden');
+            }
+
+            // Render Options
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = `option-card p-4 rounded-lg cursor-pointer flex items-start`;
+                btn.dataset.idx = idx;
+                
+                // Input visual
+                const inputType = q.type === 'm' ? 'checkbox' : 'radio';
+                const inputIcon = q.type === 'm' ? 'fa-square' : 'fa-circle';
+                
+                btn.innerHTML = `
+                    <div class="mt-1 mr-3 text-gray-400"><i class="far ${inputIcon} text-xl"></i></div>
+                    <div class="text-gray-700 font-medium">${opt.t}</div>
+                `;
+                
+                btn.onclick = () => toggleSelection(btn, q.type);
+                optsContainer.appendChild(btn);
+            });
+
+            // Reset Footer
+            document.getElementById('feedback-area').classList.add('hidden');
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function toggleSelection(btn, type) {
+            // If already locked/submitted, do nothing
+            if (document.getElementById('submit-btn').classList.contains('hidden')) return;
+
+            const icon = btn.querySelector('i');
+            
+            if (type === 's') {
+                // Clear others
+                document.querySelectorAll('.option-card').forEach(el => {
+                    el.classList.remove('selected', 'border-blue-500', 'bg-blue-50');
+                    el.querySelector('i').className = 'far fa-circle text-xl';
+                });
+                // Select this
+                btn.classList.add('selected', 'border-blue-500', 'bg-blue-50');
+                icon.className = 'fas fa-dot-circle text-xl text-blue-600';
+            } else {
+                // Toggle
+                if (btn.classList.contains('selected')) {
+                    btn.classList.remove('selected', 'border-blue-500', 'bg-blue-50');
+                    icon.className = 'far fa-square text-xl';
+                } else {
+                    btn.classList.add('selected', 'border-blue-500', 'bg-blue-50');
+                    icon.className = 'fas fa-check-square text-xl text-blue-600';
+                }
+            }
+        }
+
+        function submitAnswer() {
+            const q = questions[currentIdx];
+            const selectedEls = document.querySelectorAll('.option-card.selected');
+            
+            if (selectedEls.length === 0) {
+                alert("Please select an answer.");
+                return;
+            }
+
+            let isCorrect = true;
+            let correctIndices = [];
+            
+            // Identify correct indices
+            q.opts.forEach((o, i) => { if(o.c) correctIndices.push(i); });
+
+            // Check correctness
+            if (q.type === 's') {
+                const selectedIdx = parseInt(selectedEls[0].dataset.idx);
+                isCorrect = q.opts[selectedIdx].c;
+            } else {
+                // Multi logic
+                const selectedIndices = Array.from(selectedEls).map(el => parseInt(el.dataset.idx));
+                if (selectedIndices.length !== correctIndices.length) isCorrect = false;
+                else {
+                    selectedIndices.forEach(idx => {
+                        if (!q.opts[idx].c) isCorrect = false;
+                    });
+                }
+            }
+
+            if (isCorrect) score++;
+
+            // Reveal UI
+            const allOpts = document.querySelectorAll('.option-card');
+            allOpts.forEach((btn, idx) => {
+                btn.classList.add('disabled'); // Lock interaction
+                const icon = btn.querySelector('i');
+                const isSelected = btn.classList.contains('selected');
+                const isActuallyCorrect = q.opts[idx].c;
+
+                if (isActuallyCorrect) {
+                    btn.classList.add('correct');
+                    icon.className = 'fas fa-check-circle text-xl text-green-600';
+                } else if (isSelected && !isActuallyCorrect) {
+                    btn.classList.add('wrong');
+                    icon.className = 'fas fa-times-circle text-xl text-red-600';
+                }
+            });
+
+            // Feedback Text
+            const fbArea = document.getElementById('feedback-area');
+            const fbIcon = document.getElementById('feedback-icon');
+            const fbText = document.getElementById('feedback-text');
+            
+            fbArea.classList.remove('hidden');
+            fbArea.classList.add('flex', 'items-center');
+            
+            if (isCorrect) {
+                fbIcon.innerHTML = '<i class="fas fa-check-circle text-green-500"></i>';
+                fbText.innerText = "Correct!";
+                fbText.className = "text-green-600 font-bold text-lg";
+            } else {
+                fbIcon.innerHTML = '<i class="fas fa-times-circle text-red-500"></i>';
+                fbText.innerText = "Incorrect";
+                fbText.className = "text-red-600 font-bold text-lg";
+            }
+
+            // Switch Buttons
+            document.getElementById('submit-btn').classList.add('hidden');
+            
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            
+            if (currentIdx === questions.length - 1) {
+                nextBtn.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered ml-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            const resScreen = document.getElementById('result-screen');
+            resScreen.classList.remove('hidden');
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            document.getElementById('final-score').innerText = `${score} / ${questions.length}`;
+            document.getElementById('final-percentage').innerText = `${percentage}%`;
+            
+            const msgDiv = document.getElementById('pass-fail-msg');
+            const iconContainer = document.getElementById('result-icon-container');
+
+            if (percentage >= 65) {
+                msgDiv.innerHTML = '<span class="text-green-600">Congratulations! You Passed.</span>';
+                iconContainer.innerHTML = '<i class="fas fa-trophy text-6xl text-yellow-400 animate-bounce"></i>';
+            } else {
+                msgDiv.innerHTML = '<span class="text-red-600">You did not pass. Keep practicing!</span>';
+                iconContainer.innerHTML = '<i class="fas fa-book-reader text-6xl text-gray-400"></i>';
+            }
+        }
+
+    </script>
+</body>
+
+</html>
