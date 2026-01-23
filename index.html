@@ -127,10 +127,10 @@
                 {t:"Local class", c:true}, {t:"Global class", c:false}, {t:"Local variable", c:false}, {t:"Global variable", c:false}
             ]},
             { t: "Which function call produces the string 'LORE IPSUM FACTUM'?", type: "s", code: null, opts: [
-                {t:"to_upper(condense('Lore Ipsum Factum'))", c:true},
+                {t:"to_upper(condense('Lore IpsumFactum'))", c:true},
                 {t:"from_mixed(val = 'LorelpsumFactum' sep=)", c:false},
                 {t:"to_mixed(val = 'Lore IpsumFactum' sep=)", c:false},
-                {t:"condense to_upper('Lorelpsum Factum'))", c:false}
+                {t:"condense to_upper('LorelpsumFactum'))", c:false}
             ]},
             { t: "Given this code, which of the following statements are correct?", type: "m", code: "DATA(structure_variable) = REDUCE structure_type(\n  INIT h_structure_variable TYPE structure_type\n  FOR row IN source_itab\n  NEXT h_structure_variable-f1 += row-f1\n       h_structure_variable-f2 += row-f2 ).", opts: [
                 {t:"Components of h_structure_variable will be copied to same-named components of structure_variable.", c:true},
@@ -161,7 +161,7 @@
             ]},
             { t: "In a booking record, how can you calculate the difference in days between the order date (type D) and the flight date (type D) of a flight?", type: "s", code: null, opts: [
                 {t:"data(gv_diff_days) = conv d(gs_booking-order_date - gs_booking-flight_date).", c:false},
-                {t:"data(gv_diff_days) = gs_booking-flight_date - gs_booking-order_date.", c:false},
+                {t:"data(gv_diff_days) = gs_booking-flight_dategs_booking-order_date.", c:false},
                 {t:"data(gv_diff_days) = conv d(gs_booking-flight_date - gs_booking-order_date).", c:false},
                 {t:"data(gv_diff_days) = gs_booking-order_date - gs_booking-flight_date.", c:true}
             ]},
@@ -183,7 +183,7 @@
                 {t:"The constructor must be the first method called by the client.", c:false},
                 {t:"The constructor returns a value.", c:false}
             ]},
-            { t: "Which function call matches findings for 'find FOUND Found'?", type: "s", code: null, opts: [
+            { t: "Which function call return 0?", type: "s", code: null, opts: [
                 {t:"find(val = 'FIND Found found' sub 'F' occ = -2 CASE = abap_true)", c:false},
                 {t:"find(val 'find FOUND Found' sub 'F' occ = -2 CASE = abap_false)", c:false},
                 {t:"find(val 'find Found FOUND' sub 'F' occ = -2)", c:true},
@@ -201,10 +201,10 @@
                 {t:"The IAM app uses the Business User. The Business User uses the Business Catalog. The Business Catalog uses the Business Role. The Business Role uses the Authorization Object.", c:true}
             ]},
             { t: "When you work with a test class you can set up some prerequisites before the actual testing. In which sequence will the following fixtures be called by the test environment?", type: "s", code: "A. teardown()\nB. class_setup()\nC. class_teardown()\nD. setup()", opts: [
-                {t:"A, B, C, D", c:false},
+                {t:"A. teardown(), B. class_setup(), C. class_teardown(), D. setup()", c:false},
                 {t:"B. class_setup(), D. setup(), A. teardown(), C. class_teardown()", c:true},
-                {t:"D, A, B, C", c:false},
-                {t:"C, A, D, B", c:false}
+                {t:"D. setup(), A. teardown(), B. class_setup(), C", c:false},
+                {t:"C. class_teardown(), A. teardown(), D. setup(), B. class_setup()", c:false}
             ]},
             { t: "How can you control data access of a business user?", type: "m", code: null, opts: [
                 {t:"To control the general access implicitly via an Access Control object (define role).", c:true},
@@ -227,7 +227,7 @@
                 {t:"In a hashed internal table, specifying the primary key completely.", c:true}
             ]},
             { t: "What can be translated?", type: "m", code: null, opts: [
-                {t:"Content of a String variable", c:false}, {t:"Text symbol", c:true}, {t:"Text literal", c:true}, {t:"Message class", c:true}, {t:"Data element texts", c:true}
+                {t:"Content of a String variable", c:false}, {t:"Text symbol", c:true}, {t:"Text literal", c:true}, {t:"Message class", c:false}, {t:"Data element texts", c:true}
             ]},
             { t: "Given the following data definitions: ... In which of the following functions can you use regular expressions?", type: "m", code: "DATA: text TYPE string VALUE 'Date 1972-04-01 is in ISO format'.\nDATA: regex TYPE string VALUE '[0-9]{4}-[0-9]{2}-[0-9]{2}'.", opts: [
                 {t:"matches(val = text pcre = regex)", c:true},
@@ -262,8 +262,8 @@
                 {t:"Instead of go_cl1 = NEW #(...) you could use go_if1 = NEW #(...).", c:false}
             ]},
             { t: "You want to document a global class with ABAP Doc. What do you need to consider?", type: "m", code: null, opts: [
-                {t:"The documentation starts with \"!", c:true},
-                {t:"The documentation has to be positioned directly after the declarative statement.", c:false},
+                {t:"The documentation starts with \"!", c:false},
+                {t:"The documentation has to be positioned directly after the declarative statement.", c:true},
                 {t:"The documentation can contain links to other repository object's documentation.", c:true},
                 {t:"The documentation can be translated.", c:true},
                 {t:"The documentation may contain tags like <strong></strong>.", c:false}
@@ -297,9 +297,9 @@
             ]},
             { t: "You have a superclass super1 and a subclass sub1... The correct order is:", type: "s", code: null, opts: [
                 {t:"Class constructor of super1 -> Class constructor of sub1 -> Instance constructor of super1 -> Instance constructor of sub1", c:true},
-                {t:"Instance constructor of super1 -> Instance constructor of sub1", c:false},
-                {t:"Class constructor of sub1 -> Class constructor of super1", c:false},
-                {t:"Instance constructor of sub1 -> Instance constructor of super1", c:false}
+                {t:"Instance constructor of super1 -> Instance constructor of sub1 -> Class constructor of super1 -> Class constructor of sub1", c:false},
+                {t:"Class constructor of sub1 -> Class constructor of super1 -> Instance constructor of super1 -> Instance constructor of sub1", c:false},
+                {t:"Instance constructor of sub1 -> Instance constructor of super1 -> Class constructor of super1 -> Class constructor of sub1", c:false}
             ]},
             { t: "How do you make class sub1 a subclass of class super1?", type: "s", code: null, opts: [
                 {t:"In sub1 use clause \"INHERITING FROM super1\" in the DEFINITION part.", c:true},
@@ -307,13 +307,13 @@
                 {t:"In sub1 use clause \"INHERITING FROM super1\" in the IMPLEMENTATION part.", c:false},
                 {t:"In super1 use clause \"sub1 REDEFINITION\" in the IMPLEMENTATION part.", c:false}
             ]},
-            { t: "Given the following ABAP SQL statement excerpt... which of the following general settings should you set for the spfli database table?", type: "m", code: "SELECT SINGLE FROM spfli ...", opts: [
+            { t: "Given the following ABAP SQL statement except from an ABAP program 1 SELECT SINGLE 2 FROM spfli 3 WHERE carrid 'LH' AND connid= '0400' 4 INTO @DATA(wa). ... which of the following general settings should you set for the spfli database table?", type: "m", code: null, opts: [
                 {t:"\"Load Unit\" to \"Column Loadable\"", c:true},
                 {t:"\"Storage Type\" to \"Column Store\"", c:true},
                 {t:"\"Storage Type\" to \"Row Store\"", c:false},
                 {t:"\"Load Unit\" to \"Page Loadable\"", c:false}
             ]},
-            { t: "You have two database tables - ZDEPARTMENTS and ZEMPLOYEES... What is the correct cardinality of the foreign key relationship?", type: "s", code: null, opts: [
+            { t: "You have two database tables - ZDEPARTMENTS and ZEMPLOYEES. They are linked by a foreign key relationship: ZEMPLOYEES is the foreign key table and ZDEPA any number of employees (including none at all). What is the correct cardinality of the foreign key relationship?", type: "s", code: null, opts: [
                 {t:"[0..1, 1]", c:false}, {t:"[0..*, 1]", c:true}, {t:"[1, 1]", c:false}, {t:"[1..*, 1]", c:false}
             ]},
             { t: "Which of the following are features of Core Data Services?", type: "m", code: null, opts: [
@@ -342,7 +342,7 @@
                 {t:"substring( flight_date, 4, 2)", c:false}
             ]},
             { t: "Which of the following is a technique for defining access controls?", type: "s", code: null, opts: [
-                {t:"Data Control Language (DCL)", c:true}, {t:"Inheritance", c:false}, {t:"Singleton", c:false}, {t:"PFCG Role", c:false}
+                {t:"Casting", c:true}, {t:"Redefinition", c:false}, {t:"Singleton", c:false}, {t:"Inheritance", c:false}
             ]},
             { t: "Given the following code excerpt that defines an SAP HANA database table... Which field is defined incorrectly?", type: "s", code: "KEY field1: REFERENCE TO abap.clnt(3);\nKEY field2 abap.char(1332);\n...", opts: [
                 {t:"field2", c:false}, {t:"field4", c:false}, {t:"field3", c:false}, {t:"field1", c:true}
@@ -419,11 +419,18 @@
                 {t:"Automated client handling", c:false},
                 {t:"Elimination of the need for a database view", c:true}
             ]},
-            { t: "Which of the following integration frameworks have been released for ABAP cloud development?", type: "m", code: null, opts: [
+            { t: "Which of the following rules must extensions in SAP S/4HANA, public cloud edition adheres?", type: "m", code: null, opts: [
                 {t:"Use CI/CD pipelines", c:false},
-                {t:"Use predefined extension points", c:false},
+                {t:"Use predefined extension points", c:true},
                 {t:"OData, HTTP, SQL", c:true},
                 {t:"Build at the UX layer", c:false}
+            ]},
+            { t: "Which of the following integration frameworks have been released for ABAP cloud development?", type: "m", code: null, opts: [
+                {t:"CDS View", c:false},
+                {t:"Business Add-ins (BAdls) ", c:false},
+                {t:"SOAP consumption ", c:true},
+                {t:"Business events ", c:true},
+                {t:"OData services ", c:true}
             ]},
             { t: "Which of the following are reasons to use the side-by-side extensibility pattern?", type: "m", code: null, opts: [
                 {t:"An extension enhances an existing SAP Fiori UI", c:false},
@@ -452,7 +459,7 @@
                 {t:"Use Web Dynpros", c:false},
                 {t:"Use ABAP Development Tools in Eclipse (ADT)", c:true},
                 {t:"Modify SAP objects", c:false},
-                {t:"Use SAP-released APIs", c:true}
+                {t:"Use SAP-released extension points", c:true}
             ]},
             { t: "Which of the following enforce ABAP Cloud rules?", type: "m", code: null, opts: [
                 {t:"ABAP platform reuse services", c:false},
@@ -517,9 +524,9 @@
                 {t:"Data manipulation language", c:true}
             ]},
             { t: "In what order are objects created to generate a RESTful Application Programming application?", type: "s", code: null, opts: [
-                {t:"A. A Database table -> B. A Data model view -> C. Service Binding -> D. Projection view -> E. Service Definition", c:false},
+                {t:"A. A Database table -> B. A Data model view -> C. Service Binding -> D. Projection view -> E. Service Definition", c:true},
                 {t:"A Database table -> A Data model view -> Service Definition -> Projection view -> Service Binding", c:false},
-                {t:"A Database table -> A Data model view -> Projection view -> Service Definition -> Service Binding", c:true},
+                {t:"A Database table -> A Data model view -> Projection view -> Service Definition -> Service Binding", c:false},
                 {t:"Service definition -> Data model view -> Projection view -> Database table -> Service binding", c:false}
             ]},
             { t: "Which RESTful Application Programming object can be used to organize the display of fields in an app?", type: "s", code: null, opts: [
@@ -781,3 +788,4 @@
 </body>
 
 </html>
+
