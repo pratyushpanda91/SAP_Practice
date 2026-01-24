@@ -127,8 +127,8 @@
                 {t:"Local class", c:true}, {t:"Global class", c:false}, {t:"Local variable", c:false}, {t:"Global variable", c:false}
             ]},
             { t: "Which function call produces the string 'LORE IPSUM FACTUM'?", type: "s", code: null, opts: [
-                {t:"to_upper(condense('Lore IpsumFactum'))", c:true},
-                {t:"from_mixed(val = 'LorelpsumFactum' sep=)", c:false},
+                {t:"to_upper(condense('Lore IpsumFactum'))", c:false},
+                {t:"from_mixed(val = 'LorelpsumFactum' sep=)", c:true},
                 {t:"to_mixed(val = 'Lore IpsumFactum' sep=)", c:false},
                 {t:"condense to_upper('LorelpsumFactum'))", c:false}
             ]},
@@ -166,7 +166,7 @@
                 {t:"data(gv_diff_days) = gs_booking-order_date - gs_booking-flight_date.", c:true}
             ]},
             { t: "While debugging an ABAP program, you want the program to stop whenever the value of a variable change. Which of the following do you use?", type: "s", code: null, opts: [
-                {t:"Exception", c:false}, {t:"Conditional breakpoint", c:false}, {t:"Breakpoint Watchpoint", c:true}
+                {t:"Exception breakpoint ", c:false}, {t:"Conditional breakpoint", c:false}, {t:"Watchpoint", c:true}
             ]},
             { t: "What are some features of the current ABAP programming language?", type: "m", code: null, opts: [
                 {t:"A data object's type can change at runtime.", c:false},
@@ -175,7 +175,7 @@
                 {t:"The code is expression-based.", c:true}
             ]},
             { t: "Which of the following pre-defined ABAP data types is a complete data type?", type: "s", code: null, opts: [
-                {t:"N", c:false}, {t:"C", c:false}, {t:"P", c:true}, {t:"D", c:false}
+                {t:"N", c:false}, {t:"C", c:false}, {t:"P", c:false}, {t:"D", c:true}
             ]},
             { t: "Constructors have which of the following properties?", type: "m", code: null, opts: [
                 {t:"The constructor is automatically called during instantiation.", c:true},
@@ -184,9 +184,9 @@
                 {t:"The constructor returns a value.", c:false}
             ]},
             { t: "Which function call returns 0?", type: "s", code: null, opts: [
-                {t:"find(val = 'FIND Found found' sub 'F' occ = -2 CASE = abap_true)", c:false},
+                {t:"find(val = 'FIND Found found' sub 'F' occ = -2 CASE = abap_true)", c:true},
                 {t:"find(val 'find FOUND Found' sub 'F' occ = -2 CASE = abap_false)", c:false},
-                {t:"find(val 'FIND FOUND FOUND' sub 'F')", c:true},
+                {t:"find(val 'FIND FOUND FOUND' sub 'F')", c:false},
                 {t:"find(val 'find Found FOUND' sub 'F' occ-2-2)", c:false}
             ]},
             { t: "Given the following ABAP code, which exception will be raised on execution?", type: "s", code: "CONSTANTS c char TYPE C LENGTH 1 VALUE \"x\" .\nTRY.\nresult numbers[2/c char ].\nout->write(Result:  result  | ).\n...", opts: [
@@ -196,9 +196,9 @@
             ]},
             { t: "To give authorization to users, in which order are the artifacts being used?", type: "s", code: null, opts: [
                 {t:"The IAM app uses the Business Catalog. The Business Catalog uses the Business Role...", c:false},
-                {t:"The IAM app uses the Business Role. The Business Role uses the Authorization Object...", c:false},
+                {t:"The IAM app uses the Business Role. The Business Role uses the Authorization Object...", c:true},
                 {t:"The IAM app uses the Authorization Object. The Business Catalog uses the IAM app...", c:false},
-                {t:"The IAM app uses the Business User. The Business User uses the Business Catalog. The Business Catalog uses the Business Role. The Business Role uses the Authorization Object.", c:true}
+                {t:"The IAM app uses the Business User. The Business User uses the Business Catalog...", c:false}
             ]},
             { t: "When you work with a test class you can set up some prerequisites before the actual testing. In which sequence will the following fixtures be called by the test environment?", type: "s", code: "A. teardown()\nB. class_setup()\nC. class_teardown()\nD. setup()", opts: [
                 {t:"A. teardown(), B. class_setup(), C. class_teardown(), D. setup()", c:false},
@@ -207,8 +207,8 @@
                 {t:"C. class_teardown(), A. teardown(), D. setup(), B. class_setup()", c:false}
             ]},
             { t: "How can you control data access of a business user?", type: "m", code: null, opts: [
-                {t:"To control the general access implicitly via an Access Control object (define role).", c:true},
-                {t:"To control the \"Read access\" implicitly via an Access Control object (define role).", c:false},
+                {t:"To control the general access implicitly via an Access Control object (define role).", c:false},
+                {t:"To control the \"Read access\" implicitly via an Access Control object (define role).", c:true},
                 {t:"To control the \"Create, Update, and Delete access\" implicitly via an Access Control object (define role).", c:false},
                 {t:"To control the \"Create, Update, and Delete access\" via explicit check using AUTHORITY-CHECK.", c:true},
                 {t:"To control the \"Read access\" via explicit check using AUTHORITY-CHECK.", c:true}
@@ -227,7 +227,7 @@
                 {t:"In a hashed internal table, specifying the primary key completely.", c:true}
             ]},
             { t: "What can be translated?", type: "m", code: null, opts: [
-                {t:"Content of a String variable", c:false}, {t:"Text symbol", c:true}, {t:"Text literal", c:true}, {t:"Message class", c:false}, {t:"Data element texts", c:true}
+                {t:"Content of a String variable", c:false}, {t:"Text symbol", c:true}, {t:"Text literal", c:false}, {t:"Message class", c:true}, {t:"Data element texts", c:true}
             ]},
             { t: "Given the following data definitions: ... In which of the following functions can you use regular expressions?", type: "m", code: "DATA: text TYPE string VALUE 'Date 1972-04-01 is in ISO format'.\nDATA: regex TYPE string VALUE '[0-9]{4}-[0-9]{2}-[0-9]{2}'.", opts: [
                 {t:"matches(val = text pcre = regex)", c:true},
@@ -262,15 +262,15 @@
                 {t:"Instead of go_cl1 = NEW #(...) you could use go_if1 = NEW #(...).", c:false}
             ]},
             { t: "You want to document a global class with ABAP Doc. What do you need to consider?", type: "m", code: null, opts: [
-                {t:"The documentation starts with \"!", c:false},
-                {t:"The documentation has to be positioned directly after the declarative statement.", c:true},
+                {t:"The documentation starts with \"!", c:true},
+                {t:"The documentation has to be positioned directly after the declarative statement.", c:false},
                 {t:"The documentation can contain links to other repository object's documentation.", c:true},
-                {t:"The documentation can be translated.", c:true},
-                {t:"The documentation may contain tags like strong tag.", c:false}
+                {t:"The documentation can be translated.", c:false},
+                {t:"The documentation may contain tags like strong tag.", c:true}
             ]},
             { t: "What are some necessary parts of the singleton pattern?", type: "m", code: null, opts: [
-                {t:"Constructor visibility is set to private.", c:true},
-                {t:"Class creation is set to \"create private\".", c:false},
+                {t:"Constructor visibility is set to private.", c:false},
+                {t:"Class creation is set to \"create private\".", c:true},
                 {t:"Class method to create the singleton instance is set to private.", c:false},
                 {t:"Static attribute to store address of the singleton instance must exist.", c:true},
                 {t:"Class method to create the singleton instance must exist.", c:true}
@@ -308,10 +308,10 @@
                 {t:"In super1 use clause \"sub1 REDEFINITION\" in the IMPLEMENTATION part.", c:false}
             ]},
             { t: "Given the following ABAP SQL statement except from an ABAP program 1 SELECT SINGLE 2 FROM spfli 3 WHERE carrid 'LH' AND connid= '0400' 4 INTO @DATA(wa). ... which of the following general settings should you set for the spfli database table?", type: "m", code: null, opts: [
-                {t:"\"Load Unit\" to \"Column Loadable\"", c:true},
-                {t:"\"Storage Type\" to \"Column Store\"", c:true},
-                {t:"\"Storage Type\" to \"Row Store\"", c:false},
-                {t:"\"Load Unit\" to \"Page Loadable\"", c:false}
+                {t:"\"Load Unit\" to \"Column Loadable\"", c:false},
+                {t:"\"Storage Type\" to \"Column Store\"", c:false},
+                {t:"\"Storage Type\" to \"Row Store\"", c:true},
+                {t:"\"Load Unit\" to \"Page Loadable\"", c:true}
             ]},
             { t: "You have two database tables - ZDEPARTMENTS and ZEMPLOYEES. They are linked by a foreign key relationship: ZEMPLOYEES is the foreign key table and ZDEPA any number of employees (including none at all). What is the correct cardinality of the foreign key relationship?", type: "s", code: null, opts: [
                 {t:"[0..1, 1]", c:false}, {t:"[0..*, 1]", c:true}, {t:"[1, 1]", c:false}, {t:"[1..*, 1]", c:false}
@@ -325,24 +325,24 @@
             ]},
             { t: "You have the following CDS definition... Which of the following ON conditions must you insert in place of \"???\"?", type: "s", code: "define view entity Z_ENTITY as select from Z_SOURCE1 as _Source1 association to Z_SOURCE2 as _Source2...", opts: [
                 {t:"ON $projection.Carrier = _Source2.carrier", c:false},
-                {t:"ON Z_Source1.carrier_id=Z_Source2.carrier_id", c:false},
+                {t:"ON Z_Source1.carrier_id=Z_Source2.carrier_id", c:true},
                 {t:"ON $projection.Carrier = _Source2.carrier_id", c:false},
-                {t:"ON $projection.carrier_id = _Source2.carrier_id", c:true}
+                {t:"ON $projection.carrier_id = _Source2.carrier_id", c:false}
             ]},
             { t: "You are a consultant and the client wants you to extend this SAP database table with a new field called \"zz_countrycode\" on line. Which of the following is the correct response?", type: "s", code: null, opts: [
                 {t:"The database table can be extended whether extensibility enabled or not if it is assigned to a software component of type \"Standard ABAP\".", c:false},
                 {t:"The database table can be extended once it has been extensibility enabled by the customer.", c:false},
-                {t:"The database table can be extended whether extensibility enabled or not if it is assigned to a software component of type \"ABAP Cloud\".", c:true},
-                {t:"The database table cannot be extended since it has not been extensibility enabled by SAP.", c:false}
+                {t:"The database table can be extended whether extensibility enabled or not if it is assigned to a software component of type \"ABAP Cloud\".", c:false},
+                {t:"The database table cannot be extended since it has not been extensibility enabled by SAP.", c:true}
             ]},
             { t: "You select a field flight_date with type DATS in the field list of a CDS view. Which of the following expressions returns the 2-digit month from the field?", type: "m", code: null, opts: [
-                {t:"left(right(flight_date, 6), 2)", c:true},
+                {t:"left(right(flight_date, 6), 2)", c:false},
                 {t:"substring(flight_date, 5, 2)", c:true},
-                {t:"right(left(flight_date, 6), 2)", c:false},
+                {t:"right(left(flight_date, 6), 2)", c:true},
                 {t:"substring( flight_date, 4, 2)", c:false}
             ]},
             { t: "Which of the following is a technique for defining access controls?", type: "s", code: null, opts: [
-                {t:"Casting", c:true}, {t:"Redefinition", c:false}, {t:"Singleton", c:false}, {t:"Inheritance", c:false}
+                {t:"Casting", c:false}, {t:"Redefinition", c:false}, {t:"Singleton", c:false}, {t:"Inheritance", c:true}
             ]},
             { t: "Given the following code excerpt that defines an SAP HANA database table... Which field is defined incorrectly?", type: "s", code: "KEY field1: REFERENCE TO abap.clnt(3);\nKEY field2 abap.char(1332);\n...", opts: [
                 {t:"field2", c:false}, {t:"field4", c:false}, {t:"field3", c:false}, {t:"field1", c:true}
@@ -350,14 +350,14 @@
             { t: "Given the following Core Data Services View Entity Data... when you attempt to activate the definition, what will be the response?", type: "s", code: "DEFINE VIEW ENTITY demo_cds_view_entity AS SELECT FROM spfli { cityfrom, cityto }", opts: [
                 {t:"Activation error due to missing annotation \"@AbapCatalog.sqlViewName\"", c:false},
                 {t:"Activation error due to missing annotation \"@AccessControl.authorizationCheck\"", c:false},
-                {t:"Activation will be successful", c:false},
-                {t:"Activation error due to no key defined", c:true}
+                {t:"Activation will be successful", c:true},
+                {t:"Activation error due to no key defined", c:false}
             ]},
             { t: "Which of the following actions cause an indirect change to a database table requiring a table conversion?", type: "m", code: null, opts: [
                 {t:"Changing the field labels of a data element that is used in the table definition.", c:false},
-                {t:"Shortening the length of a domain used in a data element that is used in the table definition.", c:true},
+                {t:"Shortening the length of a domain used in a data element that is used in the table definition.", c:false},
                 {t:"Deleting a field from a structure that is included in the table definition.", c:true},
-                {t:"Renaming a field in a structure that is included in the table definition.", c:false}
+                {t:"Renaming a field in a structure that is included in the table definition.", c:true}
             ]},
             { t: "In CDS views, what do joins and associations have in common?", type: "m", code: null, opts: [
                 {t:"The data sources are linked using an ON clause.", c:true},
@@ -378,15 +378,15 @@
                 {t:"dats_add_days", c:false}
             ]},
             { t: "Which of the following types of Core Data Services Views can be used at the consumption layer?", type: "m", code: null, opts: [
-                {t:"Table Function", c:true},
+                {t:"Table Function", c:false},
                 {t:"Analytical Query", c:true},
-                {t:"Transactional Interface", c:false},
-                {t:"Transactional Query", c:false},
-                {t:"Hierarchy", c:true}
+                {t:"Transactional Interface", c:true},
+                {t:"Transactional Query", c:true},
+                {t:"Hierarchy", c:false}
             ]},
             { t: "In class ZCL_CLASS_A, you use the statement DATA var TYPE *** What may stand in place of ***?", type: "m", code: null, opts: [
-                {t:"The name of a domain from the ABAP Dictionary", c:false},
-                {t:"The name of a type defined privately in class ZCL_CLASS_A", c:true},
+                {t:"The name of a domain from the ABAP Dictionary", c:true},
+                {t:"The name of a type defined privately in class ZCL_CLASS_A", c:false},
                 {t:"The name of a data element from the ABAP Dictionary", c:true},
                 {t:"The name of a type defined privately in another class", c:false}
             ]},
@@ -404,13 +404,13 @@
             { t: "Which of the following ABAP SQL snippets are syntactically correct ways to provide a value for the parameter on line #4?", type: "m", code: "DEFINE VIEW ENTITY demo_cds_param_view_entity WITH PARAMETERS p_date : abap.dats", opts: [
                 {t:"...SELECT * FROM demo_cds_param_view_entity(p_date = '20230101') ....", c:true},
                 {t:"SELECT FROM demo_cds_param_view_entity(p_date: 20230101') ...", c:false},
-                {t:"...SELECT FROM demo_cds_param_view_entity(p_date = @(cl_abap_context_info=>get_system_date()) ...", c:true},
-                {t:"SELECT FROM demo_cds_param_view_entity(p_date: $session.system_date) ....", c:false}
+                {t:"...SELECT FROM demo_cds_param_view_entity(p_date = @(cl_abap_context_info=>get_system_date()) ...", c:false},
+                {t:"SELECT FROM demo_cds_param_view_entity(p_date: $session.system_date) ....", c:true}
             ]},
             { t: "You have attached a system field to an input parameter of a CDS view entity... What are the effects of this annotation?", type: "m", code: "@Environment.SystemField: #SYSTEM_LANGUAGE", opts: [
                 {t:"It is no longer possible to pass your own value to the parameter.", c:false},
-                {t:"The value of sy-langu will be passed to the CDS view automatically both when you use the CDS view in ABAP and in another CDS view entity.", c:false},
-                {t:"The value of sy-langu will be passed to the CDS view automatically when you use the CDS view in ABAP but not when you use it in another view entity.", c:true},
+                {t:"The value of sy-langu will be passed to the CDS view automatically both when you use the CDS view in ABAP and in another CDS view entity.", c:true},
+                {t:"The value of sy-langu will be passed to the CDS view automatically when you use the CDS view in ABAP but not when you use it in another view entity.", c:false},
                 {t:"You can still override the default value with a value of your own.", c:true}
             ]},
             { t: "Which of the following are reasons that SAP recommends developing Core Data Services view entities as opposed to classic Core Data Services DDIC-based views?", type: "m", code: null, opts: [
@@ -468,10 +468,10 @@
                 {t:"ABAP release contracts", c:false}
             ]},
             { t: "Which of the following models must you use to develop artifacts that expose ABAP-based backend services based on semantic data models?", type: "m", code: null, opts: [
-                {t:"ABAP Programming Model for SAP Fiori", c:true},
+                {t:"ABAP Programming Model for SAP Fiori", c:false},
                 {t:"Cloud Application Programming Model", c:false},
                 {t:"ABAP RESTful application programming model", c:true},
-                {t:"ABAP Cloud Development Model", c:false}
+                {t:"ABAP Cloud Development Model", c:true}
             ]},
             { t: "What are some features of ABAP SQL?", type: "m", code: null, opts: [
                 {t:"It is integrated in the ABAP programming language.", c:true},
@@ -480,20 +480,20 @@
                 {t:"It is directly executed on the HANA database.", c:false}
             ]},
             { t: "Which of the following rules apply for dividing with ABAP SQL?", type: "m", code: null, opts: [
-                {t:"Numeric function division(nominator, denominator, decimal places) accepts floating point", c:true},
-                {t:"The division operator \"/\" accepts decimal input.", c:true},
-                {t:"The division operator \"/\" accepts floating point input.", c:false},
+                {t:"Numeric function division(nominator, denominator, decimal places) accepts floating point", c:false},
+                {t:"The division operator \"/\" accepts decimal input.", c:false},
+                {t:"The division operator \"/\" accepts floating point input.", c:true},
                 {t:"Numeric function div(nominator, denominator) expects only integer input.", c:true},
-                {t:"Numeric function division(nominator, denominator, decimal places) accepts decimal input.", c:false}
+                {t:"Numeric function division(nominator, denominator, decimal places) accepts decimal input.", c:true}
             ]},
             { t: "Which of the following ABAP SQL aggregate functions accept an ABAP SQL expression (e.g. f1 +f2) as input?", type: "m", code: null, opts: [
-                {t:"max()", c:false}, {t:"avg()", c:true}, {t:"sum()", c:true}, {t:"count(*)", c:false}
+                {t:"max()", c:true}, {t:"avg()", c:false}, {t:"sum()", c:true}, {t:"count(*)", c:false}
             ]},
             { t: "In a CDS view, where can a value help be defined?", type: "s", code: null, opts: [
                 {t:"In the SQL console", c:false}, {t:"In a view definition", c:false}, {t:"In an annotation", c:true}, {t:"In an association", c:false}
             ]},
             { t: "You want to extract date information... For the extract *functions to work, what can be the data dictionary types of f_info?", type: "m", code: "extract_year(f_info) && ...", opts: [
-                {t:"TIMESTAMP", c:true}, {t:"TIMN", c:false}, {t:"UTCLONG", c:false}, {t:"DATS", c:true}, {t:"TIMS", c:true}
+                {t:"TIMESTAMP", c:true}, {t:"TIMN", c:false}, {t:"UTCLONG", c:true}, {t:"DATS", c:true}, {t:"TIMS", c:false}
             ]},
             { t: "When you join two database tables, which of the following rules applies to the database fields you use in the join?", type: "s", code: null, opts: [
                 {t:"They must be compared with an ON condition.", c:true},
@@ -503,8 +503,8 @@
             ]},
             { t: "Which of the following are valid ABAP SQL type conversions?", type: "m", code: null, opts: [
                 {t:"CAST ('field_f1' as CHAR (8)) AS f_chars", c:true},
-                {t:"CAST (29 as INT8) AS f_int8", c:true},
-                {t:"CAST (field_f2 as N (8)) AS f_n8", c:false},
+                {t:"CAST (29 as INT8) AS f_int8", c:false},
+                {t:"CAST (field_f2 as N (8)) AS f_n8", c:true},
                 {t:"CAST (34 as I) AS f_i34", c:false},
                 {t:"CAST (field_f5 as DEC (15,2)) AS f_dec_15_2", c:true}
             ]},
@@ -518,15 +518,15 @@
                 {t:"Function", c:false}, {t:"Local class", c:true}, {t:"Subroutine", c:false}, {t:"Global class", c:false}
             ]},
             { t: "Which language is used to add or change data of a business object in RESTful Application Programming?", type: "s", code: null, opts: [
-                {t:"Entity manipulation language", c:false},
+                {t:"Entity manipulation language", c:true},
                 {t:"RAP editing language", c:false},
                 {t:"Data modification language", c:false},
-                {t:"Data manipulation language", c:true}
+                {t:"Data manipulation language", c:false}
             ]},
             { t: "In what order are objects created to generate a RESTful Application Programming application?", type: "s", code: null, opts: [
-                {t:"A. A Database table -> B. A Data model view -> C. Service Binding -> D. Projection view -> E. Service Definition", c:true},
+                {t:"A Database table -> A Data model view -> Service Binding -> Projection view -> Service Definition", c:false},
                 {t:"A Database table -> A Data model view -> Service Definition -> Projection view -> Service Binding", c:false},
-                {t:"A Database table -> A Data model view -> Projection view -> Service Definition -> Service Binding", c:false},
+                {t:"A Database table -> A Data model view -> Projection view -> Service Definition -> Service Binding", c:true},
                 {t:"Service definition -> Data model view -> Projection view -> Database table -> Service binding", c:false}
             ]},
             { t: "Which RESTful Application Programming object can be used to organize the display of fields in an app?", type: "s", code: null, opts: [
@@ -788,6 +788,7 @@
 </body>
 
 </html>
+
 
 
 
