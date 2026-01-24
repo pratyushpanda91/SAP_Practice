@@ -183,10 +183,10 @@
                 {t:"The constructor must be the first method called by the client.", c:false},
                 {t:"The constructor returns a value.", c:false}
             ]},
-            { t: "Which function call return 0?", type: "s", code: null, opts: [
+            { t: "Which function call returns 0?", type: "s", code: null, opts: [
                 {t:"find(val = 'FIND Found found' sub 'F' occ = -2 CASE = abap_true)", c:false},
                 {t:"find(val 'find FOUND Found' sub 'F' occ = -2 CASE = abap_false)", c:false},
-                {t:"find(val 'find Found FOUND' sub 'F')", c:true},
+                {t:"find(val 'FIND FOUND FOUND' sub 'F')", c:true},
                 {t:"find(val 'find Found FOUND' sub 'F' occ-2-2)", c:false}
             ]},
             { t: "Given the following ABAP code, which exception will be raised on execution?", type: "s", code: "CONSTANTS c char TYPE C LENGTH 1 VALUE \"x\" .\nTRY.\nresult numbers[2/c char ].\nout->write(Result:  result  | ).\n...", opts: [
@@ -788,5 +788,6 @@
 </body>
 
 </html>
+
 
 
